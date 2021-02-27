@@ -1,0 +1,15 @@
+{ config, pkgs, options, ... }:
+
+let hostname="gziegan";
+in
+{
+  networking.hostName = hostname;
+
+  imports =
+    [ # Include the results of the hardware scan.
+      /etc/nixos/hardware-configuration.nix
+      /home/gziegan/code/dotfiles/nixos/base.nix
+      /home/gziegan/code/dotfiles/nixos/python.nix
+      /home/gziegan/code/dotfiles/nixos/packages.nix
+    ];
+}
