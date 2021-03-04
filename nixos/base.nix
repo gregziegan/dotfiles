@@ -12,27 +12,10 @@
 
   # Enable sound.
   sound.enable = true;
-  hardware.pulseaudio.enable = true;
-  hardware.pulseaudio.package = pkgs.pulseaudioFull;
-  nixpkgs.config.pulseaudio = true;
-  
-  hardware.pulseaudio.systemWide = true;
-
-  # required for spotifyd to be able to connect
-  hardware.pulseaudio.extraConfig = ''
-    unload-module module-native-protocol-unix
-    load-module module-native-protocol-unix auth-anonymous=1
-  '';
-
-  services.spotifyd = {
-    enable = true;
-    config = ''
-      [global]
-      zeroconf_port = 5354
-      backend = pulseaudio
-      bitrate = 320
-    '';
-  }; 
+#  hardware.pulseaudio.enable = true;
+#  hardware.pulseaudio.package = pkgs.pulseaudioFull;
+#  nixpkgs.config.pulseaudio = true;
+#  hardware.pulseaudio.systemWide = true;
 
   # Enable touchpad support.
   # services.xserver.libinput.enable = true;
@@ -45,15 +28,6 @@
 
   # Start the docker daemon (also creates docker group)
   virtualisation.docker.enable = true;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.gziegan = {
-    isNormalUser = true;
-    home = "/home/gziegan";
-    description = "Greg Ziegan";
-    extraGroups = [ "wheel" "networkmanager" "vboxsf" "docker" "audio" ];
-    uid = 1000;
-  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

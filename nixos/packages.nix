@@ -1,6 +1,28 @@
 { config, pkgs, options, ... }:
 
 with pkgs;
+
+let
+  extensions = (with pkgs.vscode-extensions; [
+      bbenoist.Nix
+      ms-python.python
+      ms-azuretools.vscode-docker
+      justusadam.language-haskell
+      haskell.haskell
+      vscodevim.vim
+    ])++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+    {
+      name = "vscode-direnv";
+      publisher = "Rubymaniac";
+      version = "0.0.2";
+      sha256 = "1gml41bc77qlydnvk1rkaiv95rwprzqgj895kxllqy4ps8ly6nsd";
+    }
+  ];
+  vscodium-with-extensions = pkgs.vscode-with-extensions.override {
+    vscode = pkgs.vscodium;
+    vscodeExtensions = extensions;
+  };
+in
 {
 
   # Packages I want to use
@@ -16,6 +38,8 @@ with pkgs;
     bind # for dig
     binutils-unwrapped
     cabal-install
+    cabal2nix
+    cachix
     cairo
     calibre
     chromium
@@ -24,6 +48,7 @@ with pkgs;
     curl
     cvc4
     diff-pdf
+    direnv
     dmenu
     dmidecode # system hardware info
     docker
@@ -54,8 +79,10 @@ with pkgs;
     gnutls
     gparted
     graphviz
-    hdf5
-    hdfview
+    haskellPackages.hoogle
+    haskellPackages.turtle
+    # hdf5
+    # hdfview
     hplip
     hplipWithPlugin
     imagemagick
@@ -65,12 +92,13 @@ with pkgs;
     jdk
     jq # json processor
     jupyter
-    kdeApplications.okular
-    kdeApplications.spectacle # replaced ksnapshot
-    kdeconnect
+    # kdeApplications.okular
+    # kdeApplications.spectacle # replaced ksnapshot
+    # kdeconnect
     lftp
     libertine
     libreoffice
+    lorri
     gnome3.librsvg # for rsvg-convert
     lsof
     lxqt.lximage-qt
@@ -79,6 +107,8 @@ with pkgs;
     mkpasswd
     mupdf
     ncompress
+    niv
+    nixops
     nix-index # provides nix-locate
     nix-prefetch-git
     offlineimap
@@ -99,6 +129,8 @@ with pkgs;
     rsync
     shake
     signal-desktop
+    spotifyd
+    spotify-tui
     sxiv
     tabula # extract tables from PDF files
     telnet
@@ -112,7 +144,7 @@ with pkgs;
     vim
     vistafonts # True-type fonts from MS Windows
     vlc
-    vscodium
+    vscodium-with-extensions
     wget
     wpa_supplicant
     xclip
