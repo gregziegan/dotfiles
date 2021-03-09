@@ -1,4 +1,0 @@
-[hosts.eviction-tracker]
-network = "aws"
-ip_addr = ""
-ssh_pubkey = ""

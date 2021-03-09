@@ -4,4 +4,6 @@
   imports = [
     ./eviction-tracker.nix
   ];
+
+  users.groups.within = {};
 }

@@ -10,12 +10,13 @@ let
       justusadam.language-haskell
       haskell.haskell
       vscodevim.vim
+      elmtooling.elm-ls-vscode
     ])++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
     {
-      name = "vscode-direnv";
-      publisher = "Rubymaniac";
-      version = "0.0.2";
-      sha256 = "1gml41bc77qlydnvk1rkaiv95rwprzqgj895kxllqy4ps8ly6nsd";
+      name = "nix-env-selector";
+      publisher = "arrterian";
+      version = "0.1.2";
+      sha256 = "1n5ilw1k29km9b0yzfd32m8gvwa2xhh6156d4dys6l8sbfpp2cv9";
     }
   ];
   vscodium-with-extensions = pkgs.vscode-with-extensions.override {
@@ -54,6 +55,11 @@ in
     docker
     dos2unix
     dzen2
+    elm2nix
+    elmPackages.elm
+    elmPackages.elm-format
+    elmPackages.elm-live
+    elmPackages.elm-test
     evince
     fbreader
     file
@@ -111,6 +117,7 @@ in
     nixops
     nix-index # provides nix-locate
     nix-prefetch-git
+    nodejs
     offlineimap
     openjdk
     p7zip
@@ -122,8 +129,11 @@ in
     pdfmod
     pdftk
     pkgconfig
+    postgresql
+    poetry
     python
     python3Env
+    python3Packages.autopep8
     qpdf
     qpdfview
     rsync

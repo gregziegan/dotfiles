@@ -1,12 +1,7 @@
 { config, lib, pkgs, ... }:
-
 with lib;
-
 let
-    eviction-tracker = pkgs.callPackage ./default.nix {};
-
     cfg = config.within.services.eviction-tracker;
-
 in {
     options.within.services.eviction-tracker = {
         enable = mkEnableOption "Starts court data site";
@@ -52,8 +47,9 @@ in {
         systemd.services.eviction-tracker = {
             description = "A webapp that presents and verifies court data";
 
-            after = [ "network.target" ];
-            wantedBy = [ "network.target" ];
+            wantedBy = [ "multi-user.target" ];
+            after = [ "eviction-tracker-key.service" "postgresql.service" ];
+            wants = [ "eviction-tracker-key.service" "postgresql.service" ];
 
             serviceConfig = {
                 User = "eviction-tracker";
@@ -61,62 +57,59 @@ in {
                 Restart = "on-failure";
                 WorkingDirectory = "/srv/within/eviction-tracker";
                 RestartSec = "30s";
-                Type = "notify";
 
-                 # Security
-                CapabilityBoundingSet = "";
-                DeviceAllow = [ ];
-                NoNewPrivileges = "true";
-                ProtectControlGroups = "true";
-                ProtectClock = "true";
-                PrivateDevices = "true";
-                PrivateUsers = "true";
-                ProtectHome = "true";
-                ProtectHostname = "true";
-                ProtectKernelLogs = "true";
-                ProtectKernelModules = "true";
-                ProtectKernelTunables = "true";
-                ProtectSystem = "true";
-                ProtectProc = "invisible";
-                RemoveIPC = "true";
-                RestrictSUIDSGID = "true";
-                RestrictRealtime = "true";
-                SystemCallArchitectures = "native";
-                SystemCallFilter = [
-                "~@reboot"
-                "~@module"
-                "~@mount"
-                "~@swap"
-                "~@resources"
-                "~@cpu-emulation"
-                "~@obsolete"
-                "~@debug"
-                "~@privileged"
-                ];
-                UMask = "077";
+                #  # Security
+                # CapabilityBoundingSet = "";
+                # DeviceAllow = [ ];
+                # NoNewPrivileges = "true";
+                # ProtectControlGroups = "true";
+                # ProtectClock = "true";
+                # PrivateDevices = "true";
+                # PrivateUsers = "true";
+                # ProtectHome = "true";
+                # ProtectHostname = "true";
+                # ProtectKernelLogs = "true";
+                # ProtectKernelModules = "true";
+                # ProtectKernelTunables = "true";
+                # ProtectSystem = "true";
+                # ProtectProc = "invisible";
+                # RemoveIPC = "true";
+                # RestrictSUIDSGID = "true";
+                # RestrictRealtime = "true";
+                # SystemCallArchitectures = "native";
+                # SystemCallFilter = [
+                # "~@reboot"
+                # "~@module"
+                # "~@mount"
+                # "~@swap"
+                # "~@resources"
+                # "~@cpu-emulation"
+                # "~@obsolete"
+                # "~@debug"
+                # "~@privileged"
+                # ];
+                # UMask = "077";
             };
 
             script = let site = pkgs.github.com.thebritican.eviction-tracker;
-                in ''
-                    export $(cat /srv/within/eviction-tracker/.env | xargs)
-                    export PORT=${toString cfg.port}
-                    export DOMAIN=${toString cfg.domain}
-                    cd ${site}
-                    exec ${site}/bin/eviction-tracker
-                '';
+            in ''
+              # export $(cat /srv/within/eviction-tracker/.env | xargs)
+              export FLASK_APP="eviction_tracker.app"
+              ${site}/bin/migrate config.yml
+              export FLASK_APP="eviction_tracker"
+              ${site}/bin/run config.yml
+            '';
         };
 
         # Enable nginx service
-        services.nginx = {
-            enable = true;
-            virtualHosts.${dnsName} = {
-                default = true;
-                locations."/" = {
-                    proxyPass = "http://127.0.0.1:${toString cfg.port}/";
-                };
-                addSSL = true;
-                enableACME = true;
+        services.nginx.virtualHosts.${dnsName} = {
+            serverName = "${cfg.domain}";
+            locations."/" = {
+                proxyPass = "http://127.0.0.1:${toString cfg.port}";
             };
+            forceSSL = cfg.useACME;
+            useACMEHost = "detainer-warrants.info";
+            enable = true;
         };
     };
 }

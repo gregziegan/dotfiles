@@ -1,7 +1,7 @@
 {
     "owner": "thebritican",
     "repo": "eviction-tracker",
-    "rev": "de3a7fe4df610243b56b1d5ecaeeca6992c946b7",
-    "sha256": "de3a7fe4df610243b56b1d5ecaeeca6992c946b7",
-    "fetchSubmodules": true
+    "rev": "35be8883a362f0a55df5b99f91d4403d824a28fc",
+    "sha256": "0c09ws27zj84p3kq0qp2hrlycl0q69mzc63s89mhq42y6fh25n4d",
+    "fetchSubmodules": false
 }

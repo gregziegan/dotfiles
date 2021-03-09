@@ -162,7 +162,7 @@ in
 
     system.stateVersion = "20.09"; # Did you read the comment?
 
-    systemd.services.eviction-tracker.enable = true;
+    systemd.within.services.eviction-tracker.enable = true;
 
     services.postgresql = {
       enable = true;

@@ -1,1 +1,1 @@
-{ guillermo = import ../../hosts/guillermo/configuration.nix }
+{ guillermo = import ../../hosts/guillermo/configuration.nix; }
