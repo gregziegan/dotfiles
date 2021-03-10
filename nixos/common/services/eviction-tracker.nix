@@ -5,11 +5,10 @@ let
 in {
     options.within.services.eviction-tracker = {
         enable = mkEnableOption "Starts court data site";
-        useACME = mkEnableOption "Enables ACME for cert stuff";
 
         port = mkOption {
             type = types.port;
-            default = 32837;
+            default = 8080;
             example = 9001;
             description = "The port number eviction-tracker should listen on for HTTP traffic";
         };
@@ -93,23 +92,12 @@ in {
 
             script = let site = pkgs.github.com.thebritican.eviction-tracker;
             in ''
-              # export $(cat /srv/within/eviction-tracker/.env | xargs)
+              export $(cat /srv/within/eviction-tracker/.env | xargs)
               export FLASK_APP="eviction_tracker.app"
-              ${site}/bin/migrate config.yml
+              ${site}/bin/migrate
               export FLASK_APP="eviction_tracker"
-              ${site}/bin/run config.yml
+              ${site}/bin/run
             '';
-        };
-
-        # Enable nginx service
-        services.nginx.virtualHosts.${dnsName} = {
-            serverName = "${cfg.domain}";
-            locations."/" = {
-                proxyPass = "http://127.0.0.1:${toString cfg.port}";
-            };
-            forceSSL = cfg.useACME;
-            useACMEHost = "detainer-warrants.info";
-            enable = true;
         };
     };
 }

@@ -1,8 +1,8 @@
-{ config, pkgs, ... }:
-
 let
   awsKeyId = "guillermo"; # symbolic name looked up in ~/.ec2-keys or a ~/.aws/credentials profile name
   region = "us-east-1";
+
+  pkgs = import <nixpkgs> {};
 
   # We must declare an AWS Subnet for each Availability Zone
   # because Subnets cannot span AZs.
@@ -13,12 +13,6 @@ let
   ];
 in
 {
-  imports = [
-    ./acme.nix
-
-    ../../common/base.nix
-    ../../common/services
-  ];
 
   network.description = "A host for organizing efforts.";
   network.enableRollback = true;
@@ -128,10 +122,15 @@ in
   #     This can be used to, for example, insert the IP of one machine into
   #     the config file of a service on another machine.
   machine1 = { resources, nodes, ... }: 
-  let
-    dnsName = "detainer-warrants.info";
+  let dnsName = "detainer-warrants.info";
   in
   {
+    imports = [
+      ./acme.nix
+
+      ../../common/base.nix
+      ../../common/services
+    ];
 
     # Cloud provider settings; here for AWS
     deployment.targetEnv = "ec2";
@@ -162,7 +161,9 @@ in
 
     system.stateVersion = "20.09"; # Did you read the comment?
 
-    systemd.within.services.eviction-tracker.enable = true;
+    within.services = {
+      eviction-tracker.enable = true;
+    };
 
     services.postgresql = {
       enable = true;
@@ -177,6 +178,18 @@ in
         CREATE DATABASE nixcloud;
         GRANT ALL PRIVILEGES ON DATABASE nixcloud TO nixcloud;
       '';
+    };
+
+    services.nginx = {
+      enable = true;
+      virtualHosts.${dnsName} = {
+        default = true;
+        locations."/" = {
+            proxyPass = "http://127.0.0.1:8080";
+        };
+        addSSL = true;
+        enableACME = true;
+      };
     };
 
   };

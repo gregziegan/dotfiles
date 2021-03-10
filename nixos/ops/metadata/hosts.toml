@@ -4,5 +4,5 @@ ssh_pubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJK4vQXbVjrtKGffWk6kRlBT3FUmpE
 
 [hosts.guillermo]
 network = "aws"
-ip_addr = "3.84.12.249"
-ssh_pubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG+rjm0IVQ/3a5RXjZBsO0iLok3SgkS3oB7Vy7yLHvnp"
+ip_addr = "34.229.20.70"
+ssh_pubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILtH3Cw6EWNobPDEgf5OZX8Dpcn3L7YcCY+Ia4APet6v"

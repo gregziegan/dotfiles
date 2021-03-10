@@ -5,7 +5,8 @@
     isNormalUser = true;
     extraGroups =
       [ "wheel" ];
-    openssh.authorizedKeys.keys = [
+     openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG+rjm0IVQ/3a5RXjZBsO0iLok3SgkS3oB7Vy7yLHvnp"
     ];
   };
 
