@@ -41,6 +41,14 @@ in {
             permissions = "0400";
         };
 
+        within.secrets.eviction-tracker-google-service-account = {
+            source = ./secrets/google_service_account.json;
+            dest = "/srv/within/eviction-tracker/google_service_account.json";
+            owner = "eviction-tracker";
+            group = "within";
+            permissions = "0400";
+        };
+
         networking.firewall.allowedTCPPorts = [ cfg.port ];
 
         systemd.services.eviction-tracker = {

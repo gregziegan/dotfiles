@@ -48,6 +48,7 @@ in
     csvkit
     curl
     cvc4
+    dbeaver
     diff-pdf
     direnv
     dmenu
@@ -113,6 +114,7 @@ in
     mkpasswd
     mupdf
     ncompress
+    ngrok
     niv
     nixops
     nix-index # provides nix-locate
@@ -131,9 +133,7 @@ in
     pkgconfig
     postgresql
     poetry
-    python
     python3Env
-    python3Packages.autopep8
     qpdf
     qpdfview
     rsync

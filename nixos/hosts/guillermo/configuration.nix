@@ -123,6 +123,7 @@ in
   #     the config file of a service on another machine.
   machine1 = { resources, nodes, ... }: 
   let dnsName = "detainer-warrants.info";
+      dnsName2 = "reddoorcollective.org";
   in
   {
     imports = [
