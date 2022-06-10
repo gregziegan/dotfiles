@@ -23,10 +23,10 @@
       auto-optimise-store = true;
       sandbox = true;
       substituters =
-        [ "https://xe.cachix.org" "https://nix-community.cachix.org" ];
-      trusted-users = [ "root" "cadey" ];
+        [ "https://red-door-collective.cachix.org" "https://nix-community.cachix.org" ];
+      trusted-users = [ "root" "gziegan" ];
       trusted-public-keys = [
-        "xe.cachix.org-1:kT/2G09KzMvQf64WrPBDcNWTKsA79h7+y2Fn2N7Xk2Y="
+        "red-door-collective.cachix.org-1:OFW0MLYm7Je7E/Nbr8QuQcDbM7BRZaROCyPERpcFfFE="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];
     };

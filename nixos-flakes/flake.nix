@@ -1,11 +1,11 @@
 {
-  description = "My deploy-rs config for guillermo";
+  description = "My config for guillermo";
 
   inputs = {
     agenix.url = "github:ryantm/agenix";
-    deploy-rs.url = "github:serokell/deploy-rs";
     home-manager.url = "github:nix-community/home-manager";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixops-plugged.url = "github:lukebfox/nixops-plugged";
     utils.url = "github:numtide/flake-utils";
 
     # my apps
@@ -16,10 +16,12 @@
     #};
   };
 
-  outputs = { self, nixpkgs, deploy-rs, home-manager, agenix#, eviction-tracker 
-    , ... }:
+  outputs = { self, nixpkgs, nixops-plugged, home-manager, agenix#, eviction-tracker 
+    , utils, ... }: {} 
+    // utils.lib.eachDefaultSystem (system: 
     let
-      pkgs = nixpkgs.legacyPackages."x86_64-linux";
+      pkgs = import nixpkgs { inherit system; };
+      domain = "reddoorcollective.org";
 
       mkSystem = extraModules:
         nixpkgs.lib.nixosSystem rec {
@@ -42,16 +44,30 @@
           ] ++ extraModules;
         };
     in {
-      devShells.x86_64-linux.default = pkgs.mkShell {
-        buildInputs = [
-          deploy-rs.packages.x86_64-linux.deploy-rs
-          agenix.packages.x86_64-linux.agenix
+      devShell = pkgs.mkShell {
+        nativeBuildInputs = [
+          nixops-plugged.defaultPackage.${system} 
+          agenix.packages.${system}.agenix
         ];
       };
 
+      /*nixopsConfigurations.default = {
+        inherit nixpkgs;
+        network.storage.legacy.databasefile = "~/.nixops/deployments.nixops";
+        network.description = domain;
+        network.enableRollback = true;
+        defaults.nixpkgs.pkgs = pkgs;
+        defaults._module.args = {
+          inherit domain;
+        };
+
+         guillermo = import ./hosts/guillermo.nix;
+
+      };*/
+
       nixosConfigurations = {
         # cloud
-        guillermo = mkSystem [ ./hosts/guillermo ./hardware/location/YYZ ];
+        guillermo = mkSystem [ ./hosts/guillermo ];
       };
 
       deploy.nodes.guillermo = {
@@ -60,13 +76,8 @@
 
         profiles.system = {
           user = "root";
-          path = deploy-rs.lib.x86_64-linux.activate.nixos
-            self.nixosConfigurations.guillermo;
+          path = self.nixosConfigurations.guillermo;
         };
       };
-
-      # This is highly advised, and will prevent many possible mistakes
-      checks = builtins.mapAttrs
-        (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
-    };
+    });
 }
