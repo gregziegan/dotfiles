@@ -15,8 +15,8 @@ in {
 
         domain = mkOption {
             type = types.str;
-            default = "detainer-warrants.info";
-            example = "detainer-warrants.info";
+            default = "reddoorcollective.org";
+            example = "reddoorcollective.org";
             description =
                 "The domain name that nginx should check against for HTTP hostnames";
         };
@@ -26,7 +26,7 @@ in {
 
         users.users.eviction-tracker = {
             createHome = true;
-            description = "github.com/thebritican/eviction-tracker";
+            description = "github.com/red-door-collective/eviction-tracker";
             isSystemUser = true;
             group = "within";
             home = "/srv/within/eviction-tracker";
@@ -98,7 +98,7 @@ in {
                 # UMask = "077";
             };
 
-            script = let site = pkgs.github.com.thebritican.eviction-tracker;
+            script = let site = pkgs.github.com.red-door-collective.eviction-tracker;
             in ''
               export $(cat /srv/within/eviction-tracker/.env | xargs)
               export FLASK_APP="eviction_tracker.app"

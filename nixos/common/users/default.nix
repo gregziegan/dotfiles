@@ -3,8 +3,9 @@
 {
   users.users.gziegan = {
     isNormalUser = true;
+    description = "Greg Ziegan";
     extraGroups =
-      [ "wheel" ];
+      [ "networkmanager" "wheel" "docker" ];
      openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG+rjm0IVQ/3a5RXjZBsO0iLok3SgkS3oB7Vy7yLHvnp"
     ];

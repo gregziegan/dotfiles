@@ -4,11 +4,11 @@ with pkgs;
 
 let
   extensions = (with pkgs.vscode-extensions; [
-      bbenoist.Nix
+      nix
       ms-python.python
-      ms-azuretools.vscode-docker
-      justusadam.language-haskell
-      haskell.haskell
+#      ms-azuretools.vscode-docker
+#      justusadam.language-haskell
+#      haskell.haskell
       vscodevim.vim
       elmtooling.elm-ls-vscode
     ])++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
@@ -21,6 +21,10 @@ let
   ];
   vscodium-with-extensions = pkgs.vscode-with-extensions.override {
     vscode = pkgs.vscodium;
+    vscodeExtensions = extensions;
+  };
+  vscode-with-extensions = pkgs.vscode-with-extensions.override {
+    vscode = pkgs.vscode;
     vscodeExtensions = extensions;
   };
 in
@@ -75,12 +79,12 @@ in
     gimp
     gmp # GNU multiple precision arithmetic library
     gnome3.adwaita-icon-theme # to help meld?
-    gnome3.dconf
+    dconf
     gnome3.dconf-editor
     gnome3.eog
     gnome3.gnome-disk-utility
     gnome3.gucharmap
-    gnome3.meld
+    meld
     gnumake
     gnupg
     gnutls
@@ -106,7 +110,7 @@ in
     libertine
     libreoffice
     lorri
-    gnome3.librsvg # for rsvg-convert
+    librsvg # for rsvg-convert
     lsof
     lxqt.lximage-qt
     lxqt.qterminal
@@ -128,7 +132,6 @@ in
     pavucontrol # audio
     pciutils # audio (lspci)
     pdfgrep
-    pdfmod
     pdftk
     pkgconfig
     postgresql
@@ -143,7 +146,7 @@ in
     spotify-tui
     sxiv
     tabula # extract tables from PDF files
-    telnet
+    inetutils
     texstudio
     texlive.combined.scheme-full
     tree
@@ -154,11 +157,12 @@ in
     vim
     vistafonts # True-type fonts from MS Windows
     vlc
+    vscode-with-extensions
     vscodium-with-extensions
     wget
     wpa_supplicant
     xclip
-    x11
+    xlibsWrapper
     xmlstarlet # A command line tool for manipulating and querying XML data
     xmonad-with-packages
     xorg.libX11
@@ -168,3 +172,4 @@ in
     zip
   ];
 }
+
