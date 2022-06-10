@@ -17,11 +17,26 @@
   };
 
   outputs = { self, nixpkgs, nixops-plugged, home-manager, agenix#, eviction-tracker 
-    , utils, ... }: {} 
+    , utils, ... }: let
+      pkgsFor = system: import nixpkgs {
+        inherit system;
+        overlays = [self.overlay];
+      };
+      domain = "reddoorcollective.org";
+    in {
+      nixopsConfigurations.default = {
+        inherit nixpkgs;
+        network.description = domain;
+        defaults.nixpkgs.pkgs = pkgsFor "x86_64-linux";
+        defaults._module.args = {
+          inherit domain;
+        };
+        webserver = import ./hosts/guillermo;
+      };
+    } 
     // utils.lib.eachDefaultSystem (system: 
     let
       pkgs = import nixpkgs { inherit system; };
-      domain = "reddoorcollective.org";
 
       mkSystem = extraModules:
         nixpkgs.lib.nixosSystem rec {
