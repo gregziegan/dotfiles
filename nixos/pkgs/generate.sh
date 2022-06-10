@@ -14,6 +14,6 @@ function git() {
 }
 
 # github repos
-github thebritican eviction-tracker &
+github red-door-collective eviction-tracker &
 
 wait
