@@ -34,7 +34,7 @@ with lib; {
       autoOptimiseStore = true;
       useSandbox = false;
 
-      binaryCaches = [ "https://midtndsa.cachix.org" ];
+      binaryCaches = [ "https://red-door-collective.cachix.org" ];
       binaryCachePublicKeys =
         [ "" ];
 

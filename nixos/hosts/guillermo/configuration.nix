@@ -122,8 +122,7 @@ in
   #     This can be used to, for example, insert the IP of one machine into
   #     the config file of a service on another machine.
   machine1 = { resources, nodes, ... }: 
-  let dnsName = "detainer-warrants.info";
-      dnsName2 = "reddoorcollective.org";
+  let dnsName = "reddoorcollective.org";
   in
   {
     imports = [

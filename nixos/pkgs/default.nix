@@ -1,6 +1,6 @@
 pkgs: rec {
     github.com = {
-        thebritican.eviction-tracker = pkgs.callPackage ./github.com/thebritican/eviction-tracker { };
+        red-door-collective.eviction-tracker = pkgs.callPackage ./github.com/red-door-collective/eviction-tracker { };
     };
 }
 
