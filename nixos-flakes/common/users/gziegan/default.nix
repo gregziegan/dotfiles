@@ -1,4 +1,5 @@
 { pkgs, ... }:
+
 let
   name = "Greg Ziegan";
   email = "greg.ziegan@gmail.com";
@@ -10,6 +11,7 @@ let
   };
 in {
   imports = [ ../../home-manager ];
+
   within = {
     htop.enable = true;
     neofetch.enable = true;
@@ -17,6 +19,7 @@ in {
     tmux.enable = true;
     vim.enable = true;
   };
+
   services.lorri.enable = true;
   home.packages = with pkgs; [ cachix niv nixfmt mosh gist bind unzip ];
   programs.direnv.enable = true;

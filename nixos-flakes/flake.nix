@@ -20,13 +20,14 @@
     , utils, ... }: let
       pkgsFor = system: import nixpkgs {
         inherit system;
-        overlays = [self.overlay];
+        #overlays = [self.overlay];
       };
       domain = "reddoorcollective.org";
     in {
       nixopsConfigurations.default = {
         inherit nixpkgs;
         network.description = domain;
+        network.storage.legacy.databasefile = "~/.nixops/deployments.nixops";
         defaults.nixpkgs.pkgs = pkgsFor "x86_64-linux";
         defaults._module.args = {
           inherit domain;
@@ -66,33 +67,6 @@
         ];
       };
 
-      /*nixopsConfigurations.default = {
-        inherit nixpkgs;
-        network.storage.legacy.databasefile = "~/.nixops/deployments.nixops";
-        network.description = domain;
-        network.enableRollback = true;
-        defaults.nixpkgs.pkgs = pkgs;
-        defaults._module.args = {
-          inherit domain;
-        };
-
-         guillermo = import ./hosts/guillermo.nix;
-
-      };*/
-
-      nixosConfigurations = {
-        # cloud
-        guillermo = mkSystem [ ./hosts/guillermo ];
-      };
-
-      deploy.nodes.guillermo = {
-        hostname = "149.248.59.1";
-        sshUser = "root";
-
-        profiles.system = {
-          user = "root";
-          path = self.nixosConfigurations.guillermo;
-        };
-      };
+      guillermo = mkSystem [ ./hosts/guillermo ];
     });
 }

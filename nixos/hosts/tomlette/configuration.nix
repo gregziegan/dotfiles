@@ -6,16 +6,16 @@ in
     
     imports = [
       ../../common/base.nix
-      #../../common/services
+      ../../common/services
     ];
 
-    virtualisation.docker.enable = true;
+    #virtualisation.docker.enable = true;
 
     /*within.services = {
-      eviction-tracker.enable = true;
+      eviction_tracker.enable = true;
     };*/
 
-    services.postgresql = {
+    /*services.postgresql = {
       enable = true;
       package = pkgs.postgresql_11;
       enableTCPIP = true;
@@ -28,12 +28,15 @@ in
         CREATE DATABASE nixcloud;
         GRANT ALL PRIVILEGES ON DATABASE nixcloud TO nixcloud;
       '';
-    };
+    };*/
 
-    nix = {
+    /*nix = {
       package = pkgs.nixFlakes;
       extraOptions = ''
         experimental-features = nix-command flakes
       '';
-    };
+    };*/
+    
+    services.logrotate.enable = false;
+    
 }

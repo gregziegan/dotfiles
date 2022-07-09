@@ -1,8 +1,4 @@
-[hosts.tomlette]
-network = "home"
-ssh_pubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHPjbyBezqCRV/YymEfd8n1qc+nW36aeQpswAOKLz17F"
-
 [hosts.guillermo]
 network = "aws"
-ip_addr = "54.80.219.254"
-ssh_pubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILtH3Cw6EWNobPDEgf5OZX8Dpcn3L7YcCY+Ia4APet6v"
+ip_addr = "3.95.226.192"
+ssh_pubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGLmvrICoTIZK7+QOd/AjeXly88pnxV2hUpZB4VhNldf"

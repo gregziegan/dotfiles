@@ -124,7 +124,7 @@ in
   machine1 = { resources, nodes, ... }: 
   let dnsName = "reddoorcollective.org";
   in
-  {
+  rec {
     imports = [
       ./acme.nix
 
@@ -136,7 +136,7 @@ in
     deployment.targetEnv = "ec2";
     deployment.ec2.accessKeyId = awsKeyId; # symbolic name looked up in ~/.ec2-keys or a ~/.aws/credentials profile name
     deployment.ec2.region = region;
-    deployment.ec2.instanceType = "t2.micro";
+    deployment.ec2.instanceType = "t3.small";
     deployment.ec2.ebsInitialRootDiskSize = 20; # GB
     deployment.ec2.keyPair = resources.ec2KeyPairs.my-key-pair;
     deployment.ec2.associatePublicIpAddress = true;
@@ -151,6 +151,7 @@ in
       pkgs.vim
       pkgs.postgresql
       pkgs.tree
+      pkgs.logrotate
     ];
 
     networking.hostName = "guillermo";
@@ -159,10 +160,20 @@ in
       443 # HTTPs
     ];
 
-    system.stateVersion = "20.09"; # Did you read the comment?
+    system.stateVersion = "22.05"; # Did you read the comment?
 
     within.services = {
-      eviction-tracker.enable = true;
+      eviction_tracker = {
+        enable = true;
+        db = "eviction_tracker";
+        #secrets = ./eviction_tracker/secrets/production.env;
+      };
+    };
+
+    users.users.datadog = {
+        createHome = false;
+        isSystemUser = true;
+        group = "within";
     };
 
     services.postgresql = {
@@ -173,11 +184,33 @@ in
         local all all trust
         host all all ::1/128 trust
       '';
-      initialScript = pkgs.writeText "backend-initScript" ''
-        CREATE ROLE nixcloud WITH LOGIN PASSWORD 'nixcloud' CREATEDB;
-        CREATE DATABASE nixcloud;
-        GRANT ALL PRIVILEGES ON DATABASE nixcloud TO nixcloud;
-      '';
+      ensureDatabases = [
+        within.services.eviction_tracker.db
+      ];
+      ensureUsers = [
+        {
+          name = "eviction_tracker";
+          ensurePermissions = {
+            "DATABASE eviction_tracker" = "ALL PRIVILEGES";
+          };
+        }
+        {
+          name = "datadog";
+          ensurePermissions = {
+            "ALL TABLES IN SCHEMA public" = "SELECT";
+          };
+        }
+      ];
+      #initialScript = pkgs.writeText "backend-initScript" ''
+      #  CREATE ROLE nixcloud WITH LOGIN PASSWORD 'nixcloud' CREATEDB;
+      #  CREATE DATABASE nixcloud;
+      #  GRANT ALL PRIVILEGES ON DATABASE nixcloud TO nixcloud;
+      #'';
+    };
+
+    services.postgresqlBackup = {
+      enable = true;
+      databases = [ within.services.eviction_tracker.db ];
     };
 
     services.nginx = {
@@ -185,12 +218,29 @@ in
       virtualHosts.${dnsName} = {
         default = true;
         locations."/" = {
-            proxyPass = "http://127.0.0.1:8080";
+            alias = "/srv/within/eviction_tracker/static_pages";
+        };
+        locations."/api/*" = {
+          proxyPass = "http://127.0.0.1:8080";
         };
         addSSL = true;
         enableACME = true;
       };
     };
+
+    # services.logrotate.enable = false;
+    services.logrotate.checkConfig = false;
+
+    /*services.logrotate.paths = {
+      eviction_tracker = {
+        path = "/var/log/eviction_tracker/*.log";
+        user = "root";
+        group = "root";
+        frequency = "weekly";
+        keep = 5;
+        priority = 1;
+      };
+    };*/
 
   };
 }

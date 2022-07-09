@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ./eviction-tracker.nix
+    ./eviction_tracker.nix
   ];
 
   users.groups.within = {};

@@ -1,16 +1,16 @@
 { config, lib, pkgs, ... }:
 with lib;
 let
-    cfg = config.within.services.eviction-tracker;
+    cfg = config.within.services.eviction_tracker;
 in {
-    options.within.services.eviction-tracker = {
+    options.within.services.eviction_tracker = {
         enable = mkEnableOption "Starts court data site";
 
         port = mkOption {
             type = types.port;
             default = 8080;
             example = 9001;
-            description = "The port number eviction-tracker should listen on for HTTP traffic";
+            description = "The port number eviction_tracker should listen on for HTTP traffic";
         };
 
         domain = mkOption {
@@ -20,49 +20,63 @@ in {
             description =
                 "The domain name that nginx should check against for HTTP hostnames";
         };
+
+        secrets = mkOption {
+            type = types.path;
+            default = ./eviction_tracker/secrets/production.env;
+            example = ./eviction_tracker/secrets/production.env;
+            description = "Where to find the secrets for this environment";
+        };
+
+        db = mkOption {
+            type = types.str;
+            default = "eviction_tracker";
+            example = "eviction_tracker";
+            description = "The database name";
+        };
     };
 
     config = lib.mkIf cfg.enable {
 
-        users.users.eviction-tracker = {
+        users.users.eviction_tracker = {
             createHome = true;
             description = "github.com/red-door-collective/eviction-tracker";
             isSystemUser = true;
             group = "within";
-            home = "/srv/within/eviction-tracker";
+            home = "/srv/within/eviction_tracker";
             extraGroups = [ "keys" ];
         };
 
-        within.secrets.eviction-tracker = {
-            source = ./secrets/eviction-tracker.env;
-            dest = "/srv/within/eviction-tracker/.env";
-            owner = "eviction-tracker";
+        within.secrets.eviction_tracker = {
+            source = cfg.secrets;
+            dest = "/srv/within/eviction_tracker/.env";
+            owner = "eviction_tracker";
             group = "within";
-            permissions = "0400";
+            permissions = "0440";
         };
 
-        within.secrets.eviction-tracker-google-service-account = {
-            source = ./secrets/google_service_account.json;
-            dest = "/srv/within/eviction-tracker/google_service_account.json";
-            owner = "eviction-tracker";
+        within.secrets.eviction_tracker-google-service-account = {
+            source = ./eviction_tracker/secrets/google_service_account.json;
+            dest = "/srv/within/eviction_tracker/google_service_account.json";
+            owner = "eviction_tracker";
             group = "within";
-            permissions = "0400";
+            permissions = "0440";
         };
 
         networking.firewall.allowedTCPPorts = [ cfg.port ];
 
-        systemd.services.eviction-tracker = {
+        systemd.services.eviction_tracker = {
             description = "A webapp that presents and verifies court data";
 
             wantedBy = [ "multi-user.target" ];
-            after = [ "eviction-tracker-key.service" "postgresql.service" ];
-            wants = [ "eviction-tracker-key.service" "postgresql.service" ];
+            after = [ "eviction_tracker-key.service" "postgresql.service" ];
+            wants = [ "eviction_tracker-key.service" "postgresql.service" ];
 
             serviceConfig = {
-                User = "eviction-tracker";
+                User = "eviction_tracker";
                 Group = "within";
                 Restart = "on-failure";
-                WorkingDirectory = "/srv/within/eviction-tracker";
+                WorkingDirectory = "/srv/within/eviction_tracker";
                 RestartSec = "30s";
 
                 #  # Security
@@ -100,7 +114,7 @@ in {
 
             script = let site = pkgs.github.com.red-door-collective.eviction-tracker;
             in ''
-              export $(cat /srv/within/eviction-tracker/.env | xargs)
+              export $(cat /srv/within/eviction_tracker/.env | xargs)
               export FLASK_APP="eviction_tracker.app"
               ${site}/bin/migrate
               export FLASK_APP="eviction_tracker"

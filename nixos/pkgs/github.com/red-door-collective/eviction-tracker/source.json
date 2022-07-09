@@ -1,9 +1,7 @@
 {
     "owner": "red-door-collective",
     "repo": "eviction-tracker",
-    "rev": "386f061c44eede6eca34f03b2c4f9480071f4e1c",
-    "sha256": "coUq5ep17pLjPBBJYz2ybqUlNoPpJEaPKkNerfPbM08=",
-    "fetchSubmodules": false,
-    "leaveDotGit": false,
-    "deepClone": false
+    "rev": "2bc83d4ae4e407b11a4c45e287a2b0b4a8812298",
+    "sha256": "FbFDOYaieEg2BJLJVYFtKqgFFGA8PxRzT2TO2ZSz60w=",
+    "fetchSubmodules": false
 }

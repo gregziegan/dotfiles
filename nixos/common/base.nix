@@ -26,7 +26,7 @@ with lib; {
   };
 
   config = {
-    boot.cleanTmpDir = true;
+    #boot.cleanTmpDir = true;
 
     environment.systemPackages = with pkgs; [ age minisign ];
 
@@ -34,10 +34,8 @@ with lib; {
       autoOptimiseStore = true;
       useSandbox = false;
 
-      binaryCaches = [ "https://red-door-collective.cachix.org" ];
-      binaryCachePublicKeys =
-        [ "" ];
-
+      binaryCaches =
+        [ "https://red-door-collective.cachix.org" "https://nix-community.cachix.org" ];
       trustedUsers = [ "root" "gziegan" ];
     };
 

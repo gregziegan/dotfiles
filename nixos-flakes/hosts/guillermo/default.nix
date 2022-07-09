@@ -1,13 +1,20 @@
+{ config, lib, domain, pkgs, ... }:
+
 let
   region = "us-east-1";
-  accessKeyId = "prod";
+  accessKeyId = "default";
 in {
-  network.description = "reddoorcollective.org"; # Optional description
+  # networking.description = "reddoorcollective.org"; # Optional description
 
-   machine =
-    { imports = [ ./ec2-info.nix ];
-      deployment.targetEnv = "ec2";
-      deployment.ec2.region = "us-east-1";
-      deployment.ec2.instanceType = "t2.micro";
-    };
+  imports = [
+      ./ec2-info.nix
+   ];
+
+  deployment.targetEnv = "ec2";
+  deployment.ec2.region = "us-east-1";
+  deployment.ec2.instanceType = "t2.micro";
+
+  within.users.enableSystem = true;
+  services.openssh.enable = true;
+    
 }
