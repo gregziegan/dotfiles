@@ -122,7 +122,7 @@ in
   #     This can be used to, for example, insert the IP of one machine into
   #     the config file of a service on another machine.
   machine1 = { resources, nodes, ... }: 
-  let dnsName = "reddoorcollective.org";
+  let dnsName = "reddoorcollective.online";
   in
   rec {
     imports = [
@@ -136,7 +136,7 @@ in
     deployment.targetEnv = "ec2";
     deployment.ec2.accessKeyId = awsKeyId; # symbolic name looked up in ~/.ec2-keys or a ~/.aws/credentials profile name
     deployment.ec2.region = region;
-    deployment.ec2.instanceType = "t3.small";
+    deployment.ec2.instanceType = "t2.micro";
     deployment.ec2.ebsInitialRootDiskSize = 20; # GB
     deployment.ec2.keyPair = resources.ec2KeyPairs.my-key-pair;
     deployment.ec2.associatePublicIpAddress = true;
@@ -162,12 +162,11 @@ in
 
     system.stateVersion = "22.05"; # Did you read the comment?
 
-    within.services = {
-      eviction_tracker = {
-        enable = true;
-        db = "eviction_tracker";
-        #secrets = ./eviction_tracker/secrets/production.env;
-      };
+    within.services.eviction_tracker = {
+      enable = true;
+      db = "eviction_tracker";
+      domain = "reddoorcollective.online";
+      secrets = ../../common/services/eviction_tracker/secrets/staging.env;
     };
 
     users.users.datadog = {
@@ -218,7 +217,7 @@ in
       virtualHosts.${dnsName} = {
         default = true;
         locations."/" = {
-            alias = "/srv/within/eviction_tracker/static_pages";
+            alias = "/var/www/eviction_tracker/static/";
         };
         locations."/api/*" = {
           proxyPass = "http://127.0.0.1:8080";

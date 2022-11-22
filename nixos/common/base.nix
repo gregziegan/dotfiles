@@ -68,6 +68,9 @@ with lib; {
         ${coreutils}/bin/mkdir -p /srv/within
         ${coreutils}/bin/chown root:within /srv/within
         ${coreutils}/bin/chmod 775 /srv/within
+        ${coreutils}/bin/mkdir -p /var/www
+        ${coreutils}/bin/chown root:within /var/www
+        ${coreutils}/bin/chmod 775 /var/www
       '';
     };
   };

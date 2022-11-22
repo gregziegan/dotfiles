@@ -4,24 +4,26 @@ with pkgs;
 
 let
   extensions = (with pkgs.vscode-extensions; [
-      nix
-      ms-python.python
-      vscodevim.vim
-      elmtooling.elm-ls-vscode
-    ])++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-    {
-      name = "nix-env-selector";
-      publisher = "arrterian";
-      version = "0.1.2";
-      sha256 = "1n5ilw1k29km9b0yzfd32m8gvwa2xhh6156d4dys6l8sbfpp2cv9";
-    }
-  ];
-  vscodium-with-extensions = pkgs.vscode-with-extensions.override {
-    vscode = pkgs.vscodium;
-    vscodeExtensions = extensions;
-  };
+    nix
+    arrterian.nix-env-selector
+    ms-python.python
+    vscodevim.vim
+    elmtooling.elm-ls-vscode
+  ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+      {
+        name = "vscode-test-explorer";
+        publisher = "hbenl";
+        version = "2.21.1";
+        sha256 = "fHyePd8fYPt7zPHBGiVmd8fRx+IM3/cSBCyiI/C0VAg=";
+      }
+      {
+        name = "test-adapter-converter";
+        publisher = "ms-vscode";
+        version = "0.1.6";
+        sha256 = "UC8tUe+JJ3r8nb9SsPlvVXw74W75JWjMifk39JClRF4=";
+      }
+    ];
   vscode-with-extensions = pkgs.vscode-with-extensions.override {
-    vscode = pkgs.vscode;
     vscodeExtensions = extensions;
   };
 in
@@ -42,8 +44,9 @@ in
     elmPackages.elm-live
     elmPackages.elm-test
     firefox
-    git 
+    git
     jq
+    netlify-cli
     ngrok
     niv
     nixops
@@ -55,9 +58,9 @@ in
     signal-desktop
     tree
     unzip
-    vim 
-    vscode 
+    vim
     vscode-with-extensions
+    whatsapp-for-linux
     wget
     xclip
     xlibsWrapper

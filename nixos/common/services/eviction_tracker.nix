@@ -62,20 +62,21 @@ in {
             group = "within";
             permissions = "0440";
         };
-
+        
         networking.firewall.allowedTCPPorts = [ cfg.port ];
 
         systemd.services.eviction_tracker = {
             description = "A webapp that presents and verifies court data";
 
             wantedBy = [ "multi-user.target" ];
+
             after = [ "eviction_tracker-key.service" "postgresql.service" ];
             wants = [ "eviction_tracker-key.service" "postgresql.service" ];
 
             serviceConfig = {
                 User = "eviction_tracker";
                 Group = "within";
-                Restart = "on-failure";
+                Restart = "no";
                 WorkingDirectory = "/srv/within/eviction_tracker";
                 RestartSec = "30s";
 
@@ -113,7 +114,13 @@ in {
             };
 
             script = let site = pkgs.github.com.red-door-collective.eviction-tracker;
+            staticFiles = pkgs.github.com.red-door-collective.eviction-tracker-static-files;
             in ''
+              # ln -s ${staticFiles}/static_pages /srv/within/eviction_tracker/static
+
+              mkdir -p /var/www/eviction_tracker
+              rm -rf /var/www/eviction_tracker/static
+              cp -r ${staticFiles}/static_pages /var/www/eviction_tracker/static
               export $(cat /srv/within/eviction_tracker/.env | xargs)
               export FLASK_APP="eviction_tracker.app"
               ${site}/bin/migrate
