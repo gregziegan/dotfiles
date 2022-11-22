@@ -9,7 +9,18 @@ let
     ms-python.python
     vscodevim.vim
     elmtooling.elm-ls-vscode
+    eamodio.gitlens
   ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+      { name = "vscode-pull-request-github";
+        publisher = "GitHub";
+        version = "0.55.2022112209";
+        sha256 = "cN02GzmXKMkGWbo3LVJpWPD25ZxqdXqSeXSeMfD73fs=";
+      }
+      { name = "gatito-theme";
+        publisher = "pawelgrzybek";
+        version = "0.2.3";
+        sha256 = "m2hUSShpxPerQZ7dnF6qRbB1kRo7/ZTF64tZ9iwhJFw=";
+      }
       {
         name = "vscode-test-explorer";
         publisher = "hbenl";

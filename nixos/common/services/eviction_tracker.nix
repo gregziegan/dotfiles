@@ -80,37 +80,37 @@ in {
                 WorkingDirectory = "/srv/within/eviction_tracker";
                 RestartSec = "30s";
 
-                #  # Security
-                # CapabilityBoundingSet = "";
-                # DeviceAllow = [ ];
-                # NoNewPrivileges = "true";
-                # ProtectControlGroups = "true";
-                # ProtectClock = "true";
-                # PrivateDevices = "true";
-                # PrivateUsers = "true";
-                # ProtectHome = "true";
-                # ProtectHostname = "true";
-                # ProtectKernelLogs = "true";
-                # ProtectKernelModules = "true";
-                # ProtectKernelTunables = "true";
-                # ProtectSystem = "true";
-                # ProtectProc = "invisible";
-                # RemoveIPC = "true";
-                # RestrictSUIDSGID = "true";
-                # RestrictRealtime = "true";
-                # SystemCallArchitectures = "native";
-                # SystemCallFilter = [
-                # "~@reboot"
-                # "~@module"
-                # "~@mount"
-                # "~@swap"
-                # "~@resources"
-                # "~@cpu-emulation"
-                # "~@obsolete"
-                # "~@debug"
-                # "~@privileged"
-                # ];
-                # UMask = "077";
+                # Security
+                CapabilityBoundingSet = "";
+                DeviceAllow = [ ];
+                NoNewPrivileges = "true";
+                ProtectControlGroups = "true";
+                ProtectClock = "true";
+                PrivateDevices = "true";
+                PrivateUsers = "true";
+                ProtectHome = "true";
+                ProtectHostname = "true";
+                ProtectKernelLogs = "true";
+                ProtectKernelModules = "true";
+                ProtectKernelTunables = "true";
+                ProtectSystem = "true";
+                ProtectProc = "invisible";
+                RemoveIPC = "true";
+                RestrictSUIDSGID = "true";
+                RestrictRealtime = "true";
+                SystemCallArchitectures = "native";
+                SystemCallFilter = [
+                    "~@reboot"
+                    "~@module"
+                    "~@mount"
+                    "~@swap"
+                    "~@resources"
+                    "~@cpu-emulation"
+                    "~@obsolete"
+                    "~@debug"
+                    "~@privileged"
+                ];
+                UMask = "077";
             };
 
             script = let site = pkgs.github.com.red-door-collective.eviction-tracker;
@@ -119,8 +119,10 @@ in {
               # ln -s ${staticFiles}/static_pages /srv/within/eviction_tracker/static
 
               mkdir -p /var/www/eviction_tracker
+              chmod -R 775 /var/www/eviction_tracker
               rm -rf /var/www/eviction_tracker/static
               cp -r ${staticFiles}/static_pages /var/www/eviction_tracker/static
+              chmod -R 775 /var/www/eviction_tracker/static
               export $(cat /srv/within/eviction_tracker/.env | xargs)
               export FLASK_APP="eviction_tracker.app"
               ${site}/bin/migrate
