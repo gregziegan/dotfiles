@@ -71,6 +71,7 @@ with lib; {
         ${coreutils}/bin/mkdir -p /var/www
         ${coreutils}/bin/chown root:within /var/www
         ${coreutils}/bin/chmod 775 /var/www
+        ${coreutils}/bin/chmod 775 /var/log
       '';
     };
   };

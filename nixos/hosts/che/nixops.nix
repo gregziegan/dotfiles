@@ -1,5 +1,5 @@
 let
-  awsKeyId = "guillermo"; # symbolic name looked up in ~/.ec2-keys or a ~/.aws/credentials profile name
+  awsKeyId = "che"; # symbolic name looked up in ~/.ec2-keys or a ~/.aws/credentials profile name
   region = "us-east-1";
 
   pkgs = import <nixpkgs> {};
@@ -14,7 +14,7 @@ let
 in
 {
 
-  network.description = "A host for organizing efforts.";
+  network.description = "Staging - Red Door Collective";
   network.enableRollback = true;
 
   # Now follows a lot of AWS specific networking stuff that is required
@@ -136,7 +136,7 @@ in
     deployment.targetEnv = "ec2";
     deployment.ec2.accessKeyId = awsKeyId; # symbolic name looked up in ~/.ec2-keys or a ~/.aws/credentials profile name
     deployment.ec2.region = region;
-    deployment.ec2.instanceType = "t2.micro";
+    deployment.ec2.instanceType = "t2.nano";
     deployment.ec2.ebsInitialRootDiskSize = 20; # GB
     deployment.ec2.keyPair = resources.ec2KeyPairs.my-key-pair;
     deployment.ec2.associatePublicIpAddress = true;
@@ -154,7 +154,7 @@ in
       pkgs.logrotate
     ];
 
-    networking.hostName = "guillermo";
+    networking.hostName = awsKeyId;
     networking.firewall.allowedTCPPorts = [
       80 # HTTP
       443 # HTTPs
@@ -165,14 +165,8 @@ in
     within.services.eviction_tracker = {
       enable = true;
       db = "eviction_tracker";
-      domain = "reddoorcollective.online";
+      domain = dnsName;
       secrets = ../../common/services/eviction_tracker/secrets/staging.env;
-    };
-
-    users.users.datadog = {
-        createHome = false;
-        isSystemUser = true;
-        group = "within";
     };
 
     services.postgresql = {
@@ -200,11 +194,6 @@ in
           };
         }
       ];
-      #initialScript = pkgs.writeText "backend-initScript" ''
-      #  CREATE ROLE nixcloud WITH LOGIN PASSWORD 'nixcloud' CREATEDB;
-      #  CREATE DATABASE nixcloud;
-      #  GRANT ALL PRIVILEGES ON DATABASE nixcloud TO nixcloud;
-      #'';
     };
 
     services.postgresqlBackup = {
@@ -219,7 +208,7 @@ in
         locations."/" = {
             alias = "/var/www/eviction_tracker/static/";
         };
-        locations."/api/*" = {
+        locations."~ ^/api/" = {
           proxyPass = "http://127.0.0.1:8080";
         };
         addSSL = true;
@@ -227,19 +216,39 @@ in
       };
     };
 
-    # services.logrotate.enable = false;
-    services.logrotate.checkConfig = false;
-
-    /*services.logrotate.paths = {
-      eviction_tracker = {
-        path = "/var/log/eviction_tracker/*.log";
-        user = "root";
-        group = "root";
-        frequency = "weekly";
-        keep = 5;
-        priority = 1;
+    services.logrotate = {
+      enable = true;
+      paths = {
+        eviction_tracker = {
+          path = "/var/log/eviction_tracker/capture.log";
+          user = "eviction_tracker";
+          group = "within";
+          frequency = "weekly";
+          #keep = 5;
+          #priority = 1;
+        };
       };
-    };*/
+    };
+    
+    services.datadog-agent = {
+        enable = true;
+        hostname = dnsName;
+        apiKeyFile = "/srv/within/datadog-api-key";
+    };
+
+    within.secrets.datadog-api-key = {
+        source = ../../common/services/secrets/datadog-api-key;
+        dest = "/srv/within/datadog-api-key";
+        owner = "datadog";
+        group = "within";
+        permissions = "0440";
+    };
 
   };
+
+  
+  network = {
+    storage.legacy = {};
+  };
+
 }

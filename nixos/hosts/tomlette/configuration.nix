@@ -15,7 +15,7 @@ in
       eviction_tracker.enable = true;
     };*/
 
-    /*services.postgresql = {
+    services.postgresql = {
       enable = true;
       package = pkgs.postgresql_11;
       enableTCPIP = true;
@@ -23,12 +23,7 @@ in
         local all all trust
         host all all ::1/128 trust
       '';
-      initialScript = pkgs.writeText "backend-initScript" ''
-        CREATE ROLE nixcloud WITH LOGIN PASSWORD 'nixcloud' CREATEDB;
-        CREATE DATABASE nixcloud;
-        GRANT ALL PRIVILEGES ON DATABASE nixcloud TO nixcloud;
-      '';
-    };*/
+    };
 
     /*nix = {
       package = pkgs.nixFlakes;
@@ -38,5 +33,14 @@ in
     };*/
     
     services.logrotate.enable = false;
-    
+
+    nixpkgs.config.permittedInsecurePackages = [
+      "python2.7-certifi-2021.10.8"
+      "python2.7-pyjwt-1.7.1"
+      "python3.10-certifi-2022.12.7"
+      "python3.9-poetry-1.1.14"
+      "python3.9-certifi-2021.10.8"
+    ];
+
+    nix.gc.automatic = true;
 }

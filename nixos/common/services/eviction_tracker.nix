@@ -34,6 +34,19 @@ in {
             example = "eviction_tracker";
             description = "The database name";
         };
+
+        logDir = mkOption {
+            type = types.path;
+            default = "/var/log/eviction_tracker";
+            description = ''
+                Directory for storing Eviction Tracker access logs.
+                <note><para>
+                If left as the default value this directory will automatically be created
+                before the Caddy server starts, otherwise the sysadmin is responsible for
+                ensuring the directory exists with appropriate ownership and permissions.
+                </para></note>
+            '';
+        };
     };
 
     config = lib.mkIf cfg.enable {
@@ -76,41 +89,42 @@ in {
             serviceConfig = {
                 User = "eviction_tracker";
                 Group = "within";
-                Restart = "no";
+                Restart = "on-failure";
                 WorkingDirectory = "/srv/within/eviction_tracker";
+                LogsDirectory = mkIf (cfg.logDir == "/var/log/eviction_tracker") ["eviction_tracker"];
                 RestartSec = "30s";
 
                 # Security
-                CapabilityBoundingSet = "";
-                DeviceAllow = [ ];
-                NoNewPrivileges = "true";
-                ProtectControlGroups = "true";
-                ProtectClock = "true";
-                PrivateDevices = "true";
-                PrivateUsers = "true";
-                ProtectHome = "true";
-                ProtectHostname = "true";
-                ProtectKernelLogs = "true";
-                ProtectKernelModules = "true";
-                ProtectKernelTunables = "true";
-                ProtectSystem = "true";
-                ProtectProc = "invisible";
-                RemoveIPC = "true";
-                RestrictSUIDSGID = "true";
-                RestrictRealtime = "true";
-                SystemCallArchitectures = "native";
-                SystemCallFilter = [
-                    "~@reboot"
-                    "~@module"
-                    "~@mount"
-                    "~@swap"
-                    "~@resources"
-                    "~@cpu-emulation"
-                    "~@obsolete"
-                    "~@debug"
-                    "~@privileged"
-                ];
-                UMask = "077";
+                #CapabilityBoundingSet = "";
+                #DeviceAllow = [ ];
+                #NoNewPrivileges = "true";
+                #ProtectControlGroups = "true";
+                #ProtectClock = "true";
+                #PrivateDevices = "true";
+                #PrivateUsers = "true";
+                #ProtectHome = "true";
+                #ProtectHostname = "true";
+                #ProtectKernelLogs = "true";
+                #ProtectKernelModules = "true";
+                #ProtectKernelTunables = "true";
+                #ProtectSystem = "true";
+                #ProtectProc = "invisible";
+                #RemoveIPC = "true";
+                #RestrictSUIDSGID = "true";
+                #RestrictRealtime = "true";
+                #SystemCallArchitectures = "native";
+                #SystemCallFilter = [
+                #    "~@reboot"
+                #    "~@module"
+                #    "~@mount"
+                #    "~@swap"
+                #    "~@resources"
+                #    "~@cpu-emulation"
+                #    "~@obsolete"
+                #    "~@debug"
+                #    "~@privileged"
+                #];
+                #UMask = "077";
             };
 
             script = let site = pkgs.github.com.red-door-collective.eviction-tracker;

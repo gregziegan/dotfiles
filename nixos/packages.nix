@@ -4,7 +4,7 @@ with pkgs;
 
 let
   extensions = (with pkgs.vscode-extensions; [
-    nix
+    bbenoist.nix
     arrterian.nix-env-selector
     ms-python.python
     vscodevim.vim
@@ -43,7 +43,7 @@ in
   nixpkgs.config.permittedInsecurePackages = [
     "python2.7-pyjwt-1.7.1"
   ];
-            
+
   environment.systemPackages = [ 
     cachix 
     google-chrome
@@ -60,7 +60,7 @@ in
     netlify-cli
     ngrok
     niv
-    nixops
+    nixops_unstable
     nix-prefetch-git
     nix-prefetch-github
     nodejs

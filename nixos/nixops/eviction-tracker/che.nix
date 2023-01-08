@@ -1,0 +1,1 @@
+{ che = import ../../hosts/che/configuration.nix; }

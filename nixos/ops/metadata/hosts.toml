@@ -1,4 +1,9 @@
 [hosts.guillermo]
 network = "aws"
-ip_addr = "54.227.51.162"
+ip_addr = "34.228.22.185"
 ssh_pubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGLmvrICoTIZK7+QOd/AjeXly88pnxV2hUpZB4VhNldf"
+
+[hosts.che]
+network = "aws"
+ip_addr = "3.89.63.208"
+ssh_pubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKU6+/YRj+s5oPA+8q9ZCuzYW6/rbS0X6pvv8VQ7rHnD"
