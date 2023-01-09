@@ -147,6 +147,10 @@ in
     # Packages available in SSH sessions to the machine
     environment.systemPackages = [
       pkgs.bind.dnsutils # for `dig` etc.
+      pkgs.chromedriver
+      pkgs.chromium
+      pkgs.poppler_utils
+      pkgs.tesseract
       pkgs.jq
       pkgs.vim
       pkgs.postgresql
