@@ -213,8 +213,8 @@ in
         locations."~ ^/api/" = {
           proxyPass = "http://127.0.0.1:8080";
         };
-        addSSL = true;
-        enableACME = true;
+        addSSL = false;
+        enableACME = false;
       };
     };
 

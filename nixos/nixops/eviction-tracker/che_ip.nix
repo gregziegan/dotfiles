@@ -1,1 +1,1 @@
-{ che = { ... }: { deployment.targetHost = "3.89.63.208"; }
+{ che = { ... }: { deployment.targetHost = "34.224.85.200"; }

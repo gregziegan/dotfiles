@@ -136,7 +136,7 @@ in
     deployment.targetEnv = "ec2";
     deployment.ec2.accessKeyId = awsKeyId; # symbolic name looked up in ~/.ec2-keys or a ~/.aws/credentials profile name
     deployment.ec2.region = region;
-    deployment.ec2.instanceType = "t3.small";
+    deployment.ec2.instanceType = "c6i.large";
     deployment.ec2.ebsInitialRootDiskSize = 20; # GB
     deployment.ec2.keyPair = resources.ec2KeyPairs.my-key-pair;
     deployment.ec2.associatePublicIpAddress = true;
@@ -150,7 +150,7 @@ in
       pkgs.chromedriver
       pkgs.chromium
       pkgs.poppler_utils
-      pkgs.tesseract
+      pkgs.tesseract5
       pkgs.jq
       pkgs.vim
       pkgs.postgresql

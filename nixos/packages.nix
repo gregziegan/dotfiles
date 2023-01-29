@@ -45,6 +45,7 @@ in
   ];
 
   environment.systemPackages = [ 
+    _1password-gui
     cachix 
     google-chrome
     dbeaver
