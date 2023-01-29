@@ -238,6 +238,25 @@ in
         enable = true;
         hostname = dnsName;
         apiKeyFile = "/srv/within/datadog-api-key";
+        extraConfig = {
+          logs_enabled = true;
+          use_dogstatsd = false;
+        };
+        checks = {
+          python = {
+            init_config = null;
+            instances = null;
+            logs = [
+              {
+                type = "file";
+                path = "/var/log/eviction_tracker/capture.log.1";
+                service = "eviction_tracker";
+                source = "python";
+                sourcecategory = "sourcecode";
+              }
+            ];
+          };
+        };
     };
 
     within.secrets.datadog-api-key = {
