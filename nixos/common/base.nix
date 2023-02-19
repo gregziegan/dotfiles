@@ -30,13 +30,12 @@ with lib; {
 
     environment.systemPackages = with pkgs; [ age minisign ];
 
-    nix = {
-      autoOptimiseStore = true;
-      useSandbox = false;
-
-      binaryCaches =
-        [ "https://red-door-collective.cachix.org" "https://nix-community.cachix.org" ];
-      trustedUsers = [ "root" "gziegan" ];
+    nix.settings = {
+        auto-optimise-store = true;
+        sandbox = false;
+        trusted-users = [ "root" "gziegan" ];
+        substituters = 
+          [ "https://red-door-collective.cachix.org" "https://nix-community.cachix.org" ];
     };
 
     nixpkgs.config = {

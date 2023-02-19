@@ -35,11 +35,7 @@ in
     services.logrotate.enable = false;
 
     nixpkgs.config.permittedInsecurePackages = [
-      "python2.7-certifi-2021.10.8"
-      "python2.7-pyjwt-1.7.1"
-      "python3.10-certifi-2022.12.7"
-      "python3.9-poetry-1.1.14"
-      "python3.9-certifi-2021.10.8"
+      "python3.10-certifi-2022.9.24"
     ];
 
     nix.gc.automatic = true;

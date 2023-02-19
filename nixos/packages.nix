@@ -75,7 +75,7 @@ in
     whatsapp-for-linux
     wget
     xclip
-    xlibsWrapper
+    #xlibsWrapper
     xsel
     zip
   ];

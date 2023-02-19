@@ -17,6 +17,7 @@
 
   users.users.datadog = {
     extraGroups = [ "within" ];
+    isNormalUser = true;
   };
 
   users.users.root.openssh.authorizedKeys.keys = config.users.users.gziegan.openssh.authorizedKeys.keys;
